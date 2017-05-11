@@ -1,0 +1,5 @@
+#!/bin/sh
+classpath="./FlowProcess.jar";
+JAVA_HOME=$JAVA_HOME
+export MEM_ARG="-Xmx32m -Xms32m"
+nohup java -cp $classpath -DUser_home=@LOGPATH@ -DLogger=com.flowprocess.cedf.components.log.logger.Log4j2 -DConfigPath=./conf/log4j2.xml -server $MEM_ARG com.flowprocess.cedf.ProcessNode -f:./conf/ProcessNode/Null.xml -a:exit -i:@NODEID@ &
