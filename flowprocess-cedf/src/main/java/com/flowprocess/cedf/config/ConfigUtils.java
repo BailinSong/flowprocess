@@ -2,6 +2,8 @@ package com.flowprocess.cedf.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.flowprocess.cedf.log.LogUtils;
@@ -121,8 +123,27 @@ public class ConfigUtils
 		return getConfigWithReplace(type, name, true);
 	}
 	
-	public static <V> V getPropertie(String propertie){
-		return (V)System.getProperty(propertie);
+	public static String getPropertie(String propertie,String defaultValue){
+		
+		
+
+		
+		String value=System.getProperty(propertie);
+		if(null==value||value.isEmpty()){
+			return defaultValue;
+		}else{
+			return value;
+		}
+	}
+	
+	public static void showPropertys(){
+		Set<Entry<Object, Object>> sets=System.getProperties().entrySet();
+		
+		for(Entry<Object, Object> entry:sets){
+			
+			System.out.println(entry.getKey()+"\t"+entry.getValue());
+		}
+		
 	}
 	
 	public static <V> V getConfigWithReplace(String type, String name, boolean replace)

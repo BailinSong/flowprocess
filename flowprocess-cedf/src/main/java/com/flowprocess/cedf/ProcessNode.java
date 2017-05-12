@@ -13,6 +13,7 @@ import com.flowprocess.cedf.command.CedfCommand;
 import com.flowprocess.cedf.command.CommandUtils;
 import com.flowprocess.cedf.config.ConfigUtils;
 import com.flowprocess.cedf.log.LogUtils;
+import com.flowprocess.cedf.log.logger.SystemOutLog;
 import com.flowprocess.cedf.monitor.MonitorUtils;
 import com.flowprocess.cedf.processunit.ProcessUnitUtils;
 import com.flowprocess.commons.XmlUtils;
@@ -176,51 +177,18 @@ public class ProcessNode
 		Map<String, Object> config = new HashMap<String, Object>();
 		int args_length = args.length;
 		String action="start";
-		switch (args_length)
-		{
-			case 0:
-			{
-				break;
-			}
-			
-			default:
-				//ProcessNode [-a[ction]:stop|start]	[[[-i[d]:xxx]	[-c[luster]:xxx]]|	[-f[ile]:xxx]] 
-			{
-				for (int i = 0; i < args_length; i ++)
-				{
-					String[] param_strs = args[i].split("-");
-					String param_str = param_strs[1];
-					String[] param_fields = param_str.split(":");
-					String key = param_fields[0];
-					String value = param_fields[1];
-					
-					if (("i".equalsIgnoreCase(key)) || ("id".equalsIgnoreCase(key)))
-					{
-						config.put(PARAM_ID, value);
-					}
-					else if (("c".equalsIgnoreCase(key)) || ("cluster".equalsIgnoreCase(key)))
-					{
-						config.put(PARAM_CLUSTER, value);
-					}
-					else if (("f".equalsIgnoreCase(key)) || ("file".equalsIgnoreCase(key)))
-					{
-						config.put(PARAM_FILE, value);
-					}
-					else if (("a".equalsIgnoreCase(key)) || ("action".equalsIgnoreCase(key)))
-					{
-						action=value;
-					}
-					else
-					{
-						System.out.println("invalid param:\t" + param_str);
-						System.out.println("Usage: pn [-i[d]:<id>] [-c[luster]:<cluster>]\n" +
+		
+		config.put(PARAM_ID, ConfigUtils.getPropertie("NodeId",""));
+		config.put(PARAM_CLUSTER, ConfigUtils.getPropertie("Cluster",""));
+		config.put(PARAM_FILE, ConfigUtils.getPropertie("NodeConfig",""));
+		action=ConfigUtils.getPropertie("Action","start");
+		
+		if(((String)config.get(PARAM_CLUSTER)).isEmpty()||((String)config.get(PARAM_FILE)).isEmpty()){
+		System.out.println("invalid param:\t" + config);
+		System.out.println("Usage: pn [-i[d]:<id>] [-c[luster]:<cluster>]\n" +
 										   "   or: pn [-f[ile]:<file>]");
 						System.exit(0);
-					}
 					
-				}
-				break;
-			}
 		}
 		
 //		System.out.println(log_class_name);
@@ -230,8 +198,8 @@ public class ProcessNode
 		Map<String, Object> log_config = new HashMap<String, Object>();
 		String log_config_path = "./conf/log4j2.xml";
 		//log_config.put(LogUtils.PARAM_LOGGER, Logback.class.getName());
-		log_config.put(LogUtils.PARAM_LOGGER, ConfigUtils.getPropertie(LogUtils.PARAM_LOGGER));
-		log_config.put(LogUtils.PARAM_CONFIG_PATH, ConfigUtils.getPropertie(LogUtils.PARAM_CONFIG_PATH));
+		log_config.put(LogUtils.PARAM_LOGGER, ConfigUtils.getPropertie(LogUtils.PARAM_LOGGER,SystemOutLog.class.getName()));
+		log_config.put(LogUtils.PARAM_LOGGER_CONFIG, ConfigUtils.getPropertie(LogUtils.PARAM_LOGGER_CONFIG,""));
 		LogUtils.init(log_config);
 		
 		if(action.equalsIgnoreCase("Stop"))

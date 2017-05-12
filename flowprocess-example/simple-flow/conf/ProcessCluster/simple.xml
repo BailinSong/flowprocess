@@ -1,0 +1,6 @@
+<ProcessCluster>
+	<Params></Params>
+	<ProcessUnitConfig>
+		<ProcessUnit category="simple" count="1" />
+	</ProcessUnitConfig>
+</ProcessCluster>

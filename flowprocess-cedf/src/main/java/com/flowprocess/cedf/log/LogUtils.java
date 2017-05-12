@@ -40,8 +40,8 @@ public class LogUtils
 
 
 	private static ILog m_logger;
-	private static final String DEFAULT_LOGGER = "com.flowprocess.cedf.log.SystemOutLog";
-	private static final int DEFAULT_LEVEL = LEVEL_INFO;
+	private static final String DEFAULT_LOGGER = "com.flowprocess.cedf.log.logger.SystemOutLog";
+	private static final int DEFAULT_LEVEL = LEVEL_TRACE;
 	static
 	{
 		try
@@ -57,12 +57,13 @@ public class LogUtils
 	public static void forName(String log_class_name, int level)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException
 	{
+		
 		m_logger = ReflectUtils.newObject(log_class_name);
 		m_logger.setLevel(level);
 	}
 
 	public static final String PARAM_LOGGER = "Logger";
-	public static final String PARAM_CONFIG_PATH = "ConfigPath";
+	public static final String PARAM_LOGGER_CONFIG = "LoggerConfig";
 	public static final String PARAM_LEVEL = "Level";
 
 	public static void init(Map config) throws ClassNotFoundException, InstantiationException, IllegalAccessException

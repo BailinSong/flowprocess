@@ -1,0 +1,4 @@
+<Service id="outPut"
+	class="com.example.simple.flow.service.Output">
+
+</Service>

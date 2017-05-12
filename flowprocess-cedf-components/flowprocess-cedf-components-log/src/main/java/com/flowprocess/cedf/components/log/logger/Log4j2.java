@@ -30,7 +30,7 @@ public class Log4j2 implements ILog
 			throw new RuntimeException("Log4j2 config is null");
 		}
 
-		m_log_config_path = (String) config.get(LogUtils.PARAM_CONFIG_PATH);
+		m_log_config_path = (String) config.get(LogUtils.PARAM_LOGGER_CONFIG);
 		if (m_log_config_path == null || m_log_config_path.isEmpty())
 		{
 			throw new RuntimeException("Log4j2 config <LogPath> is null");

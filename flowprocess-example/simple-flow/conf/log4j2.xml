@@ -1,0 +1,44 @@
+<configuration status="error" monitorInterval="10">
+	<properties>
+		<!-- 日志路径 -->
+		<property name="LOG_HOME">${sys:User_home}</property>
+	</properties>
+	<appenders>
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level - %msg%n" />
+		</Console>
+		<RollingFile name="FILE-DATALOG" fileName="${LOG_HOME}/DataLog/datalog.log"
+			filePattern="${LOG_HOME}/DataLog/datalog.%d{yyyy-MM-dd_HH}.log">
+			<PatternLayout pattern="%msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="FILE-RUNLOG" fileName="${LOG_HOME}/RunLog/runlog.log"
+			filePattern="${LOG_HOME}/RunLog/runlog.%d{yyyy-MM-dd_HH}.%i.log">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+				<SizeBasedTriggeringPolicy size="50MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="20">
+
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</appenders>
+
+	<loggers>
+		<Logger name="DATALOG" level="error" additivity="true">
+			<AppenderRef ref="FILE-DATALOG" />
+		</Logger>
+
+		<Root level="ALL">
+			<AppenderRef ref="FILE-RUNLOG" />
+			<AppenderRef ref="STDOUT" />
+		</Root>
+	</loggers>
+
+</configuration>

@@ -22,6 +22,10 @@ public class MonitorUtils {
 	public static boolean init(Map<String, Object> config) {
 		try {
 			Map<String, Object> monitor_config = (Map<String, Object>) config.get(ConfigUtils.PARAM_MONITOR);
+			if(null==monitor_config){
+				LogUtils.warn("Monitor config is null.");
+				return true;
+			}
 			String monitor = (String) monitor_config.get(ConfigUtils.PARAM_CLASS);
 			if (monitor != null && !monitor.isEmpty()) {
 
@@ -30,7 +34,7 @@ public class MonitorUtils {
 				return true;
 
 			} else {
-				;
+				return true;
 			}
 		} catch (Exception e) {
 			LogUtils.warn(e);
