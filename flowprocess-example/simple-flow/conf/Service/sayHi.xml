@@ -1,4 +1,0 @@
-<Service id="SayHi"
-	class="com.example.simple.flow.service.SayHi">
-	<EventQueueName>queue</EventQueueName>
-</Service>
