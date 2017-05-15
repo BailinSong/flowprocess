@@ -1,0 +1,2 @@
+<EventQueue id="queue" class="com.blueline.flowprocess.example.simple.flow.event.BlockingEventQueue">
+</EventQueue>

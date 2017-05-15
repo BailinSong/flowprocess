@@ -1,0 +1,10 @@
+<ProcessNode>
+	<ConfigClient class="com.blueline.flowprocess.core.config.client.XmlFileConfigClient">
+		<FilePath>./conf/</FilePath>
+	</ConfigClient>
+	<CommandChannel class="com.blueline.flowprocess.components.command.channel.UdpCommandChannel">
+		<ChannelAddr>255.255.255.255</ChannelAddr>
+		<ChannelPort>9998</ChannelPort>
+	</CommandChannel>
+	<Monitor/>
+</ProcessNode>

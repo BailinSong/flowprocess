@@ -1,0 +1,4 @@
+<Service id="outPut"
+	class="com.blueline.flowprocess.example.simple.flow.service.Output">
+
+</Service>

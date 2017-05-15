@@ -1,0 +1,4 @@
+#!/bin/sh
+JAVA_HOME=$JAVA_HOME
+export MEM_ARG="-Xmx@XMX@m -Xms@XMS@m"
+nohup java -DUser_home=@LOGPATH@ -DLogger=com.blueline.flowprocess.components.log.logger.Log4j2 -DLoggerConfig=./conf/log4j2.xml -DNodeConfig=./conf/ProcessNode/Null.xml -DCluster=@CLUSTER@ -DNodeId=@NODEID@ -server $MEM_ARG -jar flowprocess &

@@ -1,0 +1,83 @@
+#!/bin/sh
+BASEPATH=`pwd`/
+XMX=$2
+XMS=$3
+CLUSTER=$4
+NODEID=$5
+LOGPATH=$1/$CLUSTER/$NODEID/
+
+
+if [ "x$BASEPATH" == "x" ] || [ "x$LOGPATH" == "x" ] || [ "x$XMX" == "x" ] || [ "x$XMS" == "x" ] || [ "x$NODEID" == "x" ]
+	then
+	echo "BASEPATH=`pwd`"
+	echo "LOGPATH=$1"
+	echo "XMX=$2"
+	echo "XMS=$3"
+	echo "CLUSTER=$4"
+	echo "NODEID=$5"
+	echo -e "[\033[0;31;1mFail\033[0m]"
+
+	echo install_service [LogPath] [Xmx] [Xms] [CLUSTER] [NODEID]
+
+else
+	echo "Install $NODEID"
+	rm -f start_$NODEID
+	echo -n "create start_$NODEID"
+	cp script/start_template start_$NODEID
+
+	sed -i "s/@START@/start_$NODEID/g" start_$NODEID
+	sed -i "s/@STOP@/stop_$NODEID/g" start_$NODEID
+	sed -i "s?@BASEPATH@?$BASEPATH?g" start_$NODEID
+	sed -i "s?@LOGPATH@?$LOGPATH?g" start_$NODEID
+	sed -i "s/@XMX@/$XMX/g" start_$NODEID
+	sed -i "s/@XMS@/$XMS/g" start_$NODEID
+	sed -i "s/@CLUSTER@/$CLUSTER/g" start_$NODEID
+	sed -i "s/@NODEID@/$NODEID/g" start_$NODEID
+	chmod 777 start_$NODEID
+	echo -e "	[\033[0;32;1mSuccess\033[0m]"
+
+	rm -f stop_$CSMPI
+	echo -n "create stop_$NODEID"
+	cp script/stop_template stop_$NODEID
+	sed -i "s/@START@/start_$NODEID/g" stop_$NODEID
+	sed -i "s/@STOP@/stop_$NODEID/g" stop_$NODEID
+	sed -i "s?@BASEPATH@?$BASEPATH?g" stop_$NODEID
+	sed -i "s?@LOGPATH@?$LOGPATH?g" stop_$NODEID
+	sed -i "s/@XMX@/$XMX/g" stop_$NODEID
+	sed -i "s/@XMS@/$XMS/g" stop_$NODEID
+	sed -i "s/@CLUSTER@/$CLUSTER/g" stop_$NODEID
+	sed -i "s/@NODEID@/$NODEID/g" stop_$NODEID
+	chmod 777 stop_$NODEID
+	echo -e "	[\033[0;32;1mSuccess\033[0m]"
+
+	rm -f uninstall_$NODEID
+	echo -n "create uninstall_$NODEID"
+	cp script/uninstall_template uninstall_$NODEID
+	sed -i "s/@START@/start_$NODEID/g" uninstall_$NODEID
+	sed -i "s/@STOP@/stop_$NODEID/g" uninstall_$NODEID
+	sed -i "s?@BASEPATH@?$BASEPATH?g" uninstall_$NODEID
+	sed -i "s?@LOGPATH@?$LOGPATH?g" uninstall_$NODEID
+	sed -i "s/@XMX@/$XMX/g" uninstall_$NODEID
+	sed -i "s/@XMS@/$XMS/g" uninstall_$NODEID
+	sed -i "s/@CLUSTER@/$CLUSTER/g" uninstall_$NODEID
+	sed -i "s/@NODEID@/$NODEID/g" uninstall_$NODEID
+
+
+	chmod 777 uninstall_$NODEID
+	echo -e "	[\033[0;32;1mSuccess\033[0m]"
+
+	rm -f /etc/init.d/$NODEID
+	echo -n "create /etc/init.d/$NODEID"
+	cp script/service_template /etc/init.d/$NODEID
+	sed -i "s/@START@/start_$NODEID/g" /etc/init.d/$NODEID
+	sed -i "s/@STOP@/stop_$NODEID/g" /etc/init.d/$NODEID
+	sed -i "s?@BASEPATH@?$BASEPATH?g" /etc/init.d/$NODEID
+	sed -i "s?@LOGPATH@?$LOGPATH?g" /etc/init.d/$NODEID
+	sed -i "s/@XMX@/$XMX/g" /etc/init.d/$NODEID
+	sed -i "s/@XMS@/$XMS/g" /etc/init.d/$NODEID
+	sed -i "s/@CLUSTER@/$CLUSTER/g" /etc/init.d/$NODEID
+	sed -i "s/@NODEID@/$NODEID/g" /etc/init.d/$NODEID
+	chmod 777 /etc/init.d/$NODEID
+	echo -e "	[\033[0;32;1mSuccess\033[0m]"
+	echo -e "[\033[0;32;1mComplete\033[0m]"
+fi

@@ -1,0 +1,15 @@
+#!/bin/sh
+echo "Uninstall @NODEID@"
+echo -n "delete @START@"
+rm -f @START@
+echo -e "	[\033[0;32;1mSuccess\033[0m]"
+echo -n "delete @STOP@"
+rm -f @STOP@
+echo -e "	[\033[0;32;1mSuccess\033[0m]"
+echo -n "delete @NODEID@"
+rm -f /etc/init.d/@NODEID@
+echo -e "	[\033[0;32;1mSuccess\033[0m]"
+echo -n "delete $0"
+rm -f $0
+echo -e "	[\033[0;32;1mSuccess\033[0m]"
+echo -e "[\033[0;32;1mComplete\033[0m]"

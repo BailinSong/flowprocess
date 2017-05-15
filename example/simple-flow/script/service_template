@@ -1,0 +1,160 @@
+#!/bin/bash
+#
+# chkconfig: - 90 10
+# description:  Starts and stops flowprocess service using chkconfig
+#				Tested on Contso 6.5
+#				Should work on all Contso Core versions
+#
+# @name:	flowprocess
+# @created:	2016-11-23
+#
+#
+# Source function library.
+. /etc/init.d/functions
+
+# Variables
+# Edit these to match your system settings
+	
+
+	# java app run path
+	BASEPATH=@BASEPATH@;
+
+	# start & stop command
+	START=@START@
+	STOP=@STOP@
+
+
+	CLUSTER=@CLUSTER@
+	NODEID=@NODEID@
+
+	SERVICENAME=$NODEID
+
+	# PID
+	
+
+	# Establish args
+	ERROR=0
+	STOPPING=0
+	RUNNING=0
+	TRYCOUNT=5
+	PID=-1
+	#test java service run on pid 
+	check() {
+		PID=`ps xa |grep Cluster:$CLUSTER | grep NodeId:$NODEID|awk '{print $1}'`
+		return $PID
+	}
+	check
+
+
+
+# functions
+start() {
+	check
+	if [ "x$PID" != "x" ]
+		then
+		echo "$0 $ARG: $SERVICENAME (pid $PID) already running"
+	else
+		echo -n "Startting $SERVICENAME"
+		cd $BASEPATH
+		daemon $BASEPATH/$START > /dev/null 2>&1 &
+		while  [ 0 -le $TRYCOUNT ]
+		do
+			check
+			if [ "x$PID" != "x" ]
+			then 
+				echo -e "	(pid $PID):	[\033[0;32;1mSuccess\033[0m]"
+				return 0				
+			fi
+			TRYCOUNT=$(($TRYCOUNT-1))
+		done
+
+		check
+		if [ "x$PID" != "x" ]
+		then 
+			echo -e "	(pid $PID):	[\033[0;32;1mSuccess\033[0m]"
+		else
+			echo -e ":	[\033[0;31;1mFail\033[0m]"
+		fi
+    fi
+}
+
+
+
+stop() {
+	echo -n $"Shutting down $SERVICENAME"
+	cd $BASEPATH
+	daemon $BASEPATH/$STOP > /dev/null 2>&1 &
+	while  [ 0 -le $TRYCOUNT ]
+	do
+		check
+		if [ "x$PID" == "x" ]
+		then 
+			echo -e ":	[\033[0;32;1mSuccess\033[0m]"
+			return 0
+		fi
+		sleep 1
+		TRYCOUNT=$(($TRYCOUNT-1))
+	done
+	kill -9 $PID
+	sleep 1
+	check
+	if [ "x$PID" != "x" ]
+	then 
+		echo -e "	(pid $PID):	[\033[0;31;1mFail\033[0m]"
+	else
+		echo -e " kill -9:	[\033[0;32;1mSuccess\033[0m]"
+	fi
+	
+}
+
+
+
+status() {
+
+	check
+	if [ "x$PID" != "x" ]
+		then
+		echo -e "$SERVICENAME (pid $PID) \033[0;32;1mrunning\033[0m"
+
+	else
+		echo -e "$SERVICENAME \033[0;31;1mstopped\033[0m"
+    fi
+	
+}
+
+
+# logic
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	status)
+		status
+		;;
+	restart)
+		stop
+		start
+		;;
+	check)
+		echo $PID
+		;;
+	help|*)
+        echo $"Usage: $0 {start|stop|status|restart|help}"
+		cat <<EOF
+
+			start		- start $SERVICENAME
+			stop		- stop $SERVICENAME
+			status		- show current status of $SERVICENAME
+			restart		- restart $SERVICENAME if running by sending a SIGHUP or start if not running
+			check		- get $SERVICENAME running Pid
+			help		- this screen
+
+EOF
+	exit 1
+	;;
+esac
+
+exit 0
