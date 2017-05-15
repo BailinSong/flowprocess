@@ -30,8 +30,9 @@ public class SayHi implements IService {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				Map<String,Object> event;
+				Map<String,Object> event=null;
 				while(!exitFlag.get()){
+					try{
 					event=new HashMap<String,Object>();
 					event.put("msg", System.currentTimeMillis());
 					EventUtils.add(eventQueueName,UUID.randomUUID().toString(), event);
@@ -39,6 +40,9 @@ public class SayHi implements IService {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						LogUtils.warn("sayHiThread:interrupted");
+					}
+					}catch (Exception e) {
+						LogUtils.warnFormat("Event {} {}", event,e);
 					}
 				}
 			}
@@ -50,7 +54,7 @@ public class SayHi implements IService {
 	@Override
 	public void stop() {
 		
-		exitFlag.compareAndSet(true, false);
+		exitFlag.compareAndSet(false, true);
 		sayHiThread.interrupt();
 		
 	}
