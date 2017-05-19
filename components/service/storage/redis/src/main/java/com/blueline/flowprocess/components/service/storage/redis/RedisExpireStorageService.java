@@ -1,5 +1,4 @@
 package com.blueline.flowprocess.components.service.storage.redis;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 import com.alibaba.fastjson.JSON;
 import com.blueline.commons.JedisUtil;
 import com.blueline.commons.ReflectUtils;
@@ -21,12 +19,9 @@ import com.blueline.flowprocess.components.service.storage.api.IHandler;
 import com.blueline.flowprocess.core.config.ConfigUtils;
 import com.blueline.flowprocess.core.event.EventUtils;
 import com.blueline.flowprocess.core.log.LogUtils;
-
 import redis.clients.jedis.JedisCommands;
 import redis.clients.jedis.Tuple;
-
 public class RedisExpireStorageService extends ExceeStorageService<Map<String,Object>> {
-
 	static final String PARAM_BASE_KEY = "BaseKey";
 	static final String PARAM_DEST_PROCESS_QUEUE = "DestProcessQueue";
 	static final String PARAM_MAX_PROCESS_QUEUE_SIZE = "MaxProcessQueueSize";
@@ -35,12 +30,10 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 	static final String PARAM_PASSWORD = "Password";
 	static final String PARAM_EXPIRED_HANDLER = "ExpiredHandler";
 	static final String PARAM_INTERVAL = "Interval";
-	
 	static final String KEY_SEPARATOR = "_";
 	static final String KEY_SUFFIX = "ExpireIndex";
 	static final String HANDLE_TYPE_DEFAULT = "Default";
 	static final String HANDLE_TYPE_BYUSER = "ByUser";
-	
 	JedisUtil m_jedis_util = null;
 	String m_base_key = "";
 	String m_dest_process_queue;
@@ -52,19 +45,16 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 	final AtomicInteger processor_count = new AtomicInteger(0);
 	final Lock processor_count_lock=new ReentrantLock();
 	AtomicBoolean m_exit_flag = new AtomicBoolean(false);
-	
 	@Override
 	public void init(Map<String, Object> config) {
 		if(config == null || config.isEmpty()){
 			throw new RuntimeException("RedisExpireStorageService config is null");
 		}
-		
 		Map<String, Object> storage_config = ConfigUtils.getConfig(ConfigUtils.CONFIG_TYPE_STORAGE, (String) config.get(ConfigUtils.CONFIG_TYPE_STORAGE));
 		if (storage_config == null || storage_config.isEmpty())
 		{
 			throw new RuntimeException("RedisExpireStorageService config <Storage> is null");
 		}
-		
 		String ip = (String) storage_config.get(PARAM_IP);
 		if(ip == null || ip.isEmpty()) {
 			throw new RuntimeException("RedisExpireStorageService <Ip> config is null");
@@ -76,7 +66,6 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 		} catch (Exception e1) {
 			LogUtils.warn(e1);
 			throw new RuntimeException("RedisExpireStorageService <Port> config is null");
-			
 		}
 		m_jedis_util = JedisUtilManager.getJedisUtilInstance((String)config.get(ConfigUtils.CONFIG_TYPE_STORAGE));
 		m_base_key = (String)config.get(PARAM_BASE_KEY);
@@ -89,14 +78,12 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 			LogUtils.warn(e);
 			m_max_process_queue_size = 1;
 		}
-		
 		try {
 			m_default_interval = Integer.valueOf((String) config.get(PARAM_INTERVAL));
 		} catch (Exception e) {
 			m_default_interval = 0;
 			LogUtils.warnFormat("RedisExpireStorageService <Interval> is used dafault value {}", m_default_interval);
 		}
-		
 		m_dest_process_queue = (String) config.get(PARAM_DEST_PROCESS_QUEUE);
 		m_expired_handler = (String) config.get(PARAM_EXPIRED_HANDLER);
 		if(null!=m_expired_handler&&!m_expired_handler.isEmpty()){
@@ -109,30 +96,25 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 			m_handler = new DefaultHandler();
 		}
 	}
-
 	@Override
 	public void start() {
 		m_executor.execute(processor());
 	}
-
 	@Override
 	public void stop() {
 		m_exit_flag.set(true);
 		m_executor.shutdown();
 	}
-
 	@Override
 	public void setDefaultInterval(long interval) {
 		if(interval >= 0) {
 			m_default_interval = interval;
 		}
 	}
-
 	@Override
 	public void regHandler(IHandler<Map<String, Object>> handler) {
 		m_handler = handler;
 	}
-
 	@Override
 	public String add(Map<String, Object> data) {
 		if(data == null || data.isEmpty()) {
@@ -157,7 +139,6 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 		}
 		return null;
 	}
-
 	@Override
 	public String add(Map<String, Object> data, long ouvertime) {
 		if(data == null || data.isEmpty()) {
@@ -185,7 +166,6 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 		}
 		return null;
 	}
-	
 	public Runnable processor() {
 		Runnable runnable = new Runnable() {
 			@Override
@@ -209,10 +189,8 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 		};
 		return runnable;
 	}
-	
 	public int arrivalScheduletimeQueueProcessor(){
 		final String key = m_base_key + KEY_SUFFIX;
-		
 		List<String> arrival_scheduletime_queue_names = getArrivalScheduletimeQueueNames(key);
 		if(arrival_scheduletime_queue_names == null || arrival_scheduletime_queue_names.isEmpty()){
 			return 0;
@@ -224,7 +202,6 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 			long exec_time = System.currentTimeMillis();
 			final long accuracy_time = exec_time / 1000 * 1000;
 			Runnable runnable = new Runnable() {
-				
 				@SuppressWarnings("unchecked")
 				@Override
 				public void run() {
@@ -233,7 +210,6 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 						jedisCommands = m_jedis_util.getJedis();
 						String data_json_str = null;
 						Map<String,Object> handle_data;
-						
 						while((data_json_str = jedisCommands.rpop(queue_name)) != null)
 						{
 							if (data_json_str.isEmpty())
@@ -246,8 +222,6 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 							handle_data.put(IHandler.PARAM_EXPIRED_DATA, data);
 							m_handler.handle(handle_data);
 						}
-						
-						
 						if(!queue_name.endsWith(String.valueOf(accuracy_time))){
 							jedisCommands.zrem(key, queue_name);
 						}
@@ -260,11 +234,9 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 							processor_count.decrementAndGet();
 							processor_count_lock.notify();
 						}
-							
 					}
 				}
 			};
-			
 			try {
 				synchronized (processor_count_lock)
 				{
@@ -277,17 +249,13 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 			} catch (Exception e) {
 				LogUtils.warn(e);
 			}
-			
 		}
-		
 		return arrival_scheduletime_queue_names.size();
 	}
-	
 	private long getNextScheduletime(long begin_time, long seconds_interval){
 		long time = begin_time + seconds_interval * 1000;
 		return (time / 1000) * 1000;
 	}
-	
 	public List<String> getArrivalScheduletimeQueueNames(String queue_name){
 		if(queue_name == null || queue_name.isEmpty()){
 			return null;
@@ -310,16 +278,12 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 			return scheduletime_queue_names;
 		} catch (Exception e) {
 			LogUtils.warn(e);
-			//e.printStackTrace();
 		} finally{
 			m_jedis_util.returnResource(jedisCommands);
 		}
 		return null;
 	}
-	
-	
 	class DefaultHandler implements IHandler<Map<String,Object>>{
-
 		@Override
 		public boolean handle(Map<String, Object> param) {
 			try {
@@ -327,16 +291,10 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 				return true;
 			} catch (Exception e) {
 				LogUtils.warn(e);
-				//e.printStackTrace();
 			}
 			return false;
 		}
-		
 	}
-	
-	
-
-
 	@Override
 	public boolean remove(String expireKey, Map<String, Object> data)
 	{
@@ -356,6 +314,4 @@ public class RedisExpireStorageService extends ExceeStorageService<Map<String,Ob
 		}
 		return false;
 	}
-
-	
 }

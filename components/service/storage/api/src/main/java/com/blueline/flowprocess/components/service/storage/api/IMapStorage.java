@@ -1,6 +1,4 @@
 package com.blueline.flowprocess.components.service.storage.api;
-
-
 public interface IMapStorage<K,V>
 {
 	public V put(K key, V value);

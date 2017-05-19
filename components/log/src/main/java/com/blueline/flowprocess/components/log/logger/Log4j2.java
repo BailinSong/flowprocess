@@ -1,35 +1,28 @@
 package com.blueline.flowprocess.components.log.logger;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.ConfigurationSource;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.alibaba.fastjson.JSON;
 import com.blueline.flowprocess.core.log.ILog;
 import com.blueline.flowprocess.core.log.LogUtils;
-
 public class Log4j2 implements ILog
 {
 	static Logger m_logger_business = null;
 	static Logger m_logger = null;
-
 	public static final String ROOT_LOGGER = "ROOT";
 	public static final String DATA_LOGGER = "DATALOG";
 	String m_log_config_path = null;
-
 	public void init(Map config)
 	{
 		if (config == null || config.isEmpty())
 		{
 			throw new RuntimeException("Log4j2 config is null");
 		}
-
 		m_log_config_path = (String) config.get(LogUtils.PARAM_LOGGER_CONFIG);
 		if (m_log_config_path == null || m_log_config_path.isEmpty())
 		{
@@ -37,10 +30,8 @@ public class Log4j2 implements ILog
 		}
 		try
 		{
-			
 			ConfigurationSource source = new  ConfigurationSource(new FileInputStream(m_log_config_path), new File(m_log_config_path));
 			Configurator.initialize(null, source);
-			
 			m_logger_business = LoggerFactory.getLogger(DATA_LOGGER);
 			m_logger = LoggerFactory.getLogger(ROOT_LOGGER);
 		}
@@ -50,9 +41,6 @@ public class Log4j2 implements ILog
 			throw new RuntimeException("Log4j2 init fail," , e);
 		}
 	}
-
-	
-
 	public void log(int level, String log)
 	{
 		switch (level)
@@ -86,7 +74,6 @@ public class Log4j2 implements ILog
 			break;
 		}
 	}
-
 	public void log(int level, String format, Object... arguments)
 	{
 		switch (level)
@@ -120,7 +107,6 @@ public class Log4j2 implements ILog
 			break;
 		}
 	}
-
 	public void log(int level, String log, Throwable t)
 	{
 		switch (level)
@@ -154,7 +140,6 @@ public class Log4j2 implements ILog
 			break;
 		}
 	}
-
 	public void logStatData(String logType, Object statData)
 	{
 		if (logType!=null&&!logType.isEmpty()&&statData != null)
@@ -162,7 +147,6 @@ public class Log4j2 implements ILog
 			m_logger_business.error("{\"Time\":\"{}\",\"LogType\":\"{}\",\"Log\":{}}",System.currentTimeMillis(), logType,JSON.toJSONString(statData));
 		}
 	}
-	
 	private void trace(String msg)
 	{
 		if (m_logger.isTraceEnabled())
@@ -170,7 +154,6 @@ public class Log4j2 implements ILog
 			m_logger.trace(msg);
 		}
 	}
-	
 	private void trace(String format, Object ... arguments)
 	{
 		if (m_logger.isTraceEnabled())
@@ -178,7 +161,6 @@ public class Log4j2 implements ILog
 			m_logger.trace(format, arguments);
 		}
 	}
-
 	private void trace(String msg, Throwable t)
 	{
 		if (m_logger.isTraceEnabled())
@@ -186,7 +168,6 @@ public class Log4j2 implements ILog
 			m_logger.trace(msg, t);
 		}
 	}
-	
 	private void debug(String msg)
 	{
 		if (m_logger.isDebugEnabled())
@@ -194,7 +175,6 @@ public class Log4j2 implements ILog
 			m_logger.debug(msg);
 		}
 	}
-
 	private void debug(String format, Object ... arguments)
 	{
 		if (m_logger.isDebugEnabled())
@@ -202,7 +182,6 @@ public class Log4j2 implements ILog
 			m_logger.debug(format, arguments);
 		}
 	}
-	
 	private void debug(String msg, Throwable t)
 	{
 		if (m_logger.isDebugEnabled())
@@ -210,7 +189,6 @@ public class Log4j2 implements ILog
 			m_logger.debug(msg, t);
 		}
 	}
-
 	private void info(String msg)
 	{
 		if (m_logger.isInfoEnabled())
@@ -218,7 +196,6 @@ public class Log4j2 implements ILog
 			m_logger.info(msg);
 		}
 	}
-	
 	private void info(String format, Object ... arguments)
 	{
 		if (m_logger.isInfoEnabled())
@@ -226,7 +203,6 @@ public class Log4j2 implements ILog
 			m_logger.info(format, arguments);
 		}
 	}
-
 	private void info(String msg, Throwable t)
 	{
 		if (m_logger.isInfoEnabled())
@@ -234,7 +210,6 @@ public class Log4j2 implements ILog
 			m_logger.info(msg, t);
 		}
 	}
-
 	private void warn(String msg, Throwable t)
 	{
 		if (m_logger.isWarnEnabled())
@@ -242,7 +217,6 @@ public class Log4j2 implements ILog
 			m_logger.warn(msg, t);
 		}
 	}
-
 	private void warn(String msg)
 	{
 		if (m_logger.isWarnEnabled())
@@ -250,7 +224,6 @@ public class Log4j2 implements ILog
 			m_logger.warn(msg);
 		}
 	}
-	
 	private void warn(String format, Object ... arguments)
 	{
 		if (m_logger.isWarnEnabled())
@@ -258,7 +231,6 @@ public class Log4j2 implements ILog
 			m_logger.warn(format, arguments);
 		}
 	}
-
 	private void error(String msg)
 	{
 		if (m_logger.isErrorEnabled())
@@ -266,7 +238,6 @@ public class Log4j2 implements ILog
 			m_logger.error(msg);
 		}
 	}
-	
 	private void error(String format, Object ... arguments)
 	{
 		if (m_logger.isErrorEnabled())
@@ -274,7 +245,6 @@ public class Log4j2 implements ILog
 			m_logger.error(format, arguments);
 		}
 	}
-
 	private void error(String msg, Throwable t)
 	{
 		if (m_logger.isErrorEnabled())
@@ -282,10 +252,6 @@ public class Log4j2 implements ILog
 			m_logger.error(msg, t);
 		}
 	}
-
 	public void setLevel(int value) {
-		// TODO Auto-generated method stub
-		
 	}
-
 }

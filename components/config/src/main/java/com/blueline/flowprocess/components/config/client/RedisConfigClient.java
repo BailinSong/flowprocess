@@ -1,38 +1,27 @@
 package com.blueline.flowprocess.components.config.client;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import com.blueline.commons.JedisUtil;
 import com.blueline.commons.XmlUtils;
 import com.blueline.flowprocess.core.config.IConfigClient;
-
 import redis.clients.jedis.JedisCommands;
-
-
 public class RedisConfigClient implements IConfigClient {
-
 	public JedisUtil jedis;
-
 	public String generateId() {
 		String id = "ProcessNode_" + getHostIp(getInetAddress());
-
 		JedisCommands jc = jedis.getJedis();
 		long count;
 		try {
 			count = jc.incr(id);
 			return String.format("%s_%04d", id, count);
-
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
 			jedis.returnResource(jc);
 		}
-
 	}
-
 	public static InetAddress getInetAddress() {
 		try {
 			return InetAddress.getLocalHost();
@@ -40,20 +29,16 @@ public class RedisConfigClient implements IConfigClient {
 		}
 		return null;
 	}
-
 	public static String getHostIp(InetAddress netAddress) {
 		if (null == netAddress) {
 			return null;
 		}
-		String ip = netAddress.getHostAddress(); // get the ip address
+		String ip = netAddress.getHostAddress(); 
 		return ip;
 	}
-
 	public void init(Map<String, Object> param) {
 		jedis = new JedisUtil(param);
-
 	}
-
 	public String getConfigString(String type, String name) {
 		JedisCommands jc = jedis.getJedis();
 		String str = null;
@@ -64,20 +49,16 @@ public class RedisConfigClient implements IConfigClient {
 		} finally {
 			jedis.returnResource(jc);
 		}
-
 		return str;
 	}
-
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> stringToMap(String xml_string) {
-
 		try {
 			return XmlUtils.XMLString2MAP(xml_string);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
-
 	@SuppressWarnings("unchecked")
 	public <V> V getConfig(String type, String name) {
 		try {
@@ -87,7 +68,6 @@ public class RedisConfigClient implements IConfigClient {
 					e);
 		}
 	}
-
 	@SuppressWarnings("unchecked")
 	public <V> V getConfig(String type, String name, String format, Map<String, Object> param_map) {
 		try {
@@ -105,5 +85,4 @@ public class RedisConfigClient implements IConfigClient {
 					e);
 		}
 	}
-
 }

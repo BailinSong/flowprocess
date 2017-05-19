@@ -1,5 +1,4 @@
 package com.blueline.flowprocess.core.command;
-
 public interface ICommandHandler
 {
 	public String getCommand();

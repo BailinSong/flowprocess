@@ -1,7 +1,5 @@
 package com.blueline.flowprocess.core.command.model;
-
 public class PUCommand {
-
 	public final static String COMMAND_PARAM_COUNT = "Count";
 	public final static String COMMAND_ACTION_START = "Start";
 	public final static String COMMAND_ACTION_STOP = "Stop";

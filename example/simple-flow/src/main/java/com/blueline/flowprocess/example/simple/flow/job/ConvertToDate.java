@@ -1,19 +1,12 @@
 package com.blueline.flowprocess.example.simple.flow.job;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-
 import com.blueline.flowprocess.core.flow.IJob;
-
 public class ConvertToDate implements IJob {
-
 	@Override
 	public void init(Map<String, Object> config) {
-		// TODO Auto-generated method stub
-
 	}
-
 	@Override
 	public String exec(Map<String, Object> data) {
 		Long time=(Long)data.get("msg");
@@ -23,5 +16,4 @@ public class ConvertToDate implements IJob {
 		data.put("formatDate", formatDate);
 		return formatDate.substring(formatDate.length()-1,formatDate.length());
 	}
-
 }

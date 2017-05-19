@@ -1,24 +1,17 @@
 package com.blueline.flowprocess.core.command;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-
 import com.blueline.flowprocess.core.config.ConfigUtils;
-
-
-
 public class CedfCommandTool
 {
 	private static final String COMMAND_EXIT = "exit";
 	private static final String COMMAND_SET = "set";
 	private static final String COMMAND_PN = CommandUtils.COMMAND_PROCESS_NODE;
 	private static final String COMMAND_PU = CommandUtils.COMMAND_PROCESS_UNIT;
-	
 	private static final String PARAM_RANGE = "range";
 	private static final String PARAM_NAME = "name";
-	
 	public static void main(String[] args) throws Exception
 	{
 		String range = CommandUtils.RANGE_ALL;
@@ -26,10 +19,8 @@ public class CedfCommandTool
 		String command_word;
 		String action;
 		Map<String, Object> params = new HashMap<String, Object>();
-		
 		ConfigUtils.init(new HashMap<String, Object>());
 		CommandUtils.init(new HashMap<String, Object>());
-		
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		while (true)
 		{
@@ -38,13 +29,10 @@ public class CedfCommandTool
 			{
 				break;
 			}
-			
 			String[] parts = line.split(" ");
 			command_word = parts[0];
-			
 			if (COMMAND_SET.equals(command_word))
 			{
-				//set [range=(all|cluster|node)] [name=<name>]
 				if (parts.length == 1)
 				{
 					System.out.println("range=" + range + "\tname=" + name);
@@ -80,8 +68,6 @@ public class CedfCommandTool
 			}
 			else if (COMMAND_PN.equalsIgnoreCase(command_word))
 			{
-				//pn load <cluster> [<paramkey>=<paramvalue>]{0,n}
-				//pn (start|stop|unload|exit)
 				action = parts[1];
 				params = new HashMap<String, Object>();
 				if (CommandUtils.ACTION_LOAD.equals(action))
@@ -110,11 +96,6 @@ public class CedfCommandTool
 			}
 			else if (COMMAND_PU.equalsIgnoreCase(command_word))
 			{
-				//load <category> [id=<id>] [<paramkey>=<paramvalue>]{0,n}
-				//start <id> <count> [<category>]
-				//stop <id> <count> [<category>]
-				//adjust <id> <count> [<category>]
-				//unload <id>
 				action = parts[1];
 				params = new HashMap<String, Object>();
 				if (CommandUtils.ACTION_LOAD.equals(action))

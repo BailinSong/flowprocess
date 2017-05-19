@@ -1,7 +1,5 @@
 package com.blueline.flowprocess.core.monitor;
-
 import java.util.Map;
-
 public interface ICollect {
 	public void collect(String cpType, Map<String, Object> dataMap);
 	public boolean start();

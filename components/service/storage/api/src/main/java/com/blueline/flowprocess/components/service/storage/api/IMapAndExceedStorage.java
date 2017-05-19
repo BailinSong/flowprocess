@@ -1,5 +1,4 @@
 package com.blueline.flowprocess.components.service.storage.api;
-
 public interface IMapAndExceedStorage<K,V> {
 	public void setDefaultInterval(long interval);
 	public V put(K key, V value);
