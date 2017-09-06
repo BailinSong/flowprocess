@@ -45,7 +45,7 @@ public class ConfigUtils
 	{
 		DEFAULT_CONFIG_CLIENT_CONFIG.put(PARAM_CLASS, "com.blueline.flowprocess.core.config.client.XmlFileConfigClient");
 		DEFAULT_CONFIG_CLIENT_CONFIG.put(XML_FILE_PARAM_FILE_PATH, "./conf/");
-		DEFAULT_CONFIG_CLIENT_CONFIG.put(XML_FILE_PARAM_RESOURCE_PATH, "/com/wisdom/csmp/conf/");
+		DEFAULT_CONFIG_CLIENT_CONFIG.put(XML_FILE_PARAM_RESOURCE_PATH, "/com/blueline/flowprocess/conf/");
 	};
 	private static String VARIABLE_FORMAT = "\\$\\{%s\\}";
 	private static String m_id;
