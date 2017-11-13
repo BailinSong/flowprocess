@@ -22,15 +22,12 @@
 
 		<fileSet>
 			<directory>target</directory>
-			<outputDirectory></outputDirectory>
 			<fileMode>0755</fileMode>
 			<includes>
 				<include>flowprocess</include>
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory></directory>
-			<outputDirectory></outputDirectory>
 			<fileMode>0755</fileMode>
 			<includes>
 				<include>*.sh</include>
@@ -47,8 +44,6 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory></directory>
-			<outputDirectory></outputDirectory>
 			<lineEnding>unix</lineEnding>
 			<fileMode>0755</fileMode>
 			<includes>

@@ -13,27 +13,11 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-    	<groupId>com.blueline</groupId>
-    	<artifactId>flowprocess-commons</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
   <packaging>pom</packaging>
   <modules>
   	<module>log</module>
-
   	<module>command</module>
   	<module>config</module>
-  	
   	<module>service</module>
   	<module>manager</module>
   	<module>event</module>
