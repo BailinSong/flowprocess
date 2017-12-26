@@ -349,7 +349,7 @@ public class EventUtils {
 		Object event_queue_template_configs = m_event_config.get(PARAM_EVENT_QUEUE_TEMPLATE);
 		if (event_queue_template_configs != null) {
 			if (event_queue_template_configs instanceof List) {
-				List<Map<String, Object>> event_queue_template_config_list = (List<Map<String, Object>>) event_queue_configs;
+				List<Map<String, Object>> event_queue_template_config_list = (List<Map<String, Object>>) event_queue_template_configs;
 				for (int i = 0; i < event_queue_template_config_list.size(); i++) {
 					Map<String, Object> event_queue_template_config = event_queue_template_config_list.get(i);
 					String id = (String) event_queue_template_config.get(PARAM_ID);
